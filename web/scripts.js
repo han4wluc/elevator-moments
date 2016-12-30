@@ -2,15 +2,25 @@ console.log('script loaded');
 var jQuery = $;
 var state = 0;			  
 var listen = true;
+//var bufferPixel = 2000；
+var evenSpeed = 4.5;
 
 var patternUp = function(){
   $( "html, body" ).stop();
   console.log("go up");
   direction = "up";
+  //buffer
+  $("html, body").animate( 
+    {scrollTop: document.body.scrollTop-2000
+    },{
+      duration:1800 ,   
+      easing: "easeInQuad"} 
+  ); 
+  //even speed
   $("html, body").animate( 
     {scrollTop: $("html, body").offset().top +"px"
     },{
-      duration: document.body.scrollTop*2,   
+      duration: document.body.scrollTop/evenSpeed,   
       easing: "linear"} 
   );
 } 
@@ -19,10 +29,18 @@ var patternDown = function(){
   $( "html, body" ).stop();
   console.log("go down");
   direction = "down";
+  //buffer
+  $("html, body").animate( 
+    {scrollTop: document.body.scrollTop+2000
+    },{
+      duration:1800 ,   
+      easing: "easeInQuad"} 
+  ); 
+  //even speed
   $("html, body").animate({     
     scrollTop:$(document).height()
   }, {
-    duration:(($(document).height()-document.body.scrollTop)*2),  
+    duration:(($(document).height()-document.body.scrollTop)/evenSpeed),  
     easing: "linear"
   });
   return
@@ -34,16 +52,16 @@ var patternStop = function(){
   if(direction == "up"){
     console.log("go up and stop");
     setTimeout(function(){  
-      $('html, body').animate({ scrollTop: document.body.scrollTop-200 },
-          { duration: 1000, 
+      $('html, body').animate({ scrollTop: document.body.scrollTop-2000},
+          { duration: 1800, 
            easing: 'easeOutQuad' });
     }, 0);
   }
   if(direction == "down"){
     console.log("go down and stop");
     setTimeout(function(){  
-      $('html, body').animate({ scrollTop: document.body.scrollTop+200 },
-          { duration: 1000, 
+      $('html, body').animate({ scrollTop: document.body.scrollTop+2000},
+          { duration: 1800, 
            easing: 'easeOutQuad' });
     }, 0);      
   }
@@ -60,62 +78,68 @@ var accelerations =["9675","9703","9732","9716","9644","9716","9692","9665","983
 var i = 0;
 
 setTimeout(function(){
-	console.log("load image");
-	//run
-	setInterval(function(){
-	  acceleration = accelerations[i]
-	  if(acceleration === undefined){
-	    console.log('no more accelerations, please refresh page');
-	    return;
-	  };
-	  i++;
+	console.log("load image for 2 secs");
+	$('html, body').animate({
+      scrollTop: $(document).height()
+  }, 2000);
+	console.log("scroll down");
+	//run data
+	setTimeout(function(){
+		setInterval(function(){
+		  acceleration = accelerations[i]
+		  if(acceleration === undefined){
+		    console.log('no more accelerations, please refresh page');
+		    return;
+		  };
+		  i++;
 
-	  console.log(acceleration);
+		  console.log(acceleration);
 
-    if(listen == false){
-    	return;
-    }
+	    if(listen == false){
+	    	return;
+	    }
 
-		if(acceleration > 10200){
-			if(state == 1){
+			if(acceleration > 10200){
+				if(state == 1){
+					return;
+				}
+				state++;
+				listen = false; 
+				setTimeout(function(){
+					listen = true;
+				},1000)//1000 shorter then from max to min
+
+			}else if(acceleration < 9200){
+				if(state == -1){
+					return;
+				}
+				state--;
+				listen = false; 
+				setTimeout(function(){
+					listen = true;
+				},1000)
+
+			}else{
 				return;
 			}
-			state++;
-			listen = false; 
-			setTimeout(function(){
-				listen = true;
-			},1000)
 
-		}else if(acceleration < 9200){
-			if(state == -1){
-				return;
+			if(state === 1){
+				console.log("up");
+				patternUp();
+			} else if(state === 0){
+				console.log("stop");
+				patternStop();
+			} else if(state === -1){
+				console.log("down");
+				patternDown();
 			}
-			state--;
-			listen = false; 
-			setTimeout(function(){
-				listen = true;
-			},1000)
+			
 
-		}else{
-			return;
-		}
+		}, 100);
+	
+	},2000);
 
-		if(state === 1){
-			console.log("up");
-			patternUp();
-		} else if(state === 0){
-			console.log("stop");
-			patternStop();
-		} else if(state === -1){
-			console.log("down");
-			patternDown();
-		}
-		
-
-	}, 100);
-
-
-},5000);
+},2000);
 
 
 
