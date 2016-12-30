@@ -2,8 +2,18 @@ console.log('script loaded');
 var jQuery = $;
 var state = 0;			  
 var listen = true;
-//var bufferPixel = 2000；
-var evenSpeed = 4.5;
+var bufferHeight = 2800;
+var evenSpeed = 6.125;
+
+//floor sign
+var heightPerFloor = ($(document).height())/8;
+console.log(heightPerFloor);
+for(var j=0; j<= $(document).height() ; j+=heightPerFloor){ 
+  var floorNum = ($(document).height()-j)/heightPerFloor //+1;  
+  var floorHeight = j-150;
+  console.log(floorNum);
+  $('body').append(`<div style="position:absolute; top:${floorHeight}px; left:20px">floor${floorNum}</div>`);
+}
 
 var patternUp = function(){
   $( "html, body" ).stop();
@@ -11,7 +21,7 @@ var patternUp = function(){
   direction = "up";
   //buffer
   $("html, body").animate( 
-    {scrollTop: document.body.scrollTop-2000
+    {scrollTop: document.body.scrollTop-bufferHeight
     },{
       duration:1800 ,   
       easing: "easeInQuad"} 
@@ -31,7 +41,7 @@ var patternDown = function(){
   direction = "down";
   //buffer
   $("html, body").animate( 
-    {scrollTop: document.body.scrollTop+2000
+    {scrollTop: document.body.scrollTop+bufferHeight
     },{
       duration:1800 ,   
       easing: "easeInQuad"} 
@@ -52,7 +62,7 @@ var patternStop = function(){
   if(direction == "up"){
     console.log("go up and stop");
     setTimeout(function(){  
-      $('html, body').animate({ scrollTop: document.body.scrollTop-2000},
+      $('html, body').animate({ scrollTop: document.body.scrollTop-bufferHeight},
           { duration: 1800, 
            easing: 'easeOutQuad' });
     }, 0);
@@ -60,7 +70,7 @@ var patternStop = function(){
   if(direction == "down"){
     console.log("go down and stop");
     setTimeout(function(){  
-      $('html, body').animate({ scrollTop: document.body.scrollTop+2000},
+      $('html, body').animate({ scrollTop: document.body.scrollTop+bufferHeight},
           { duration: 1800, 
            easing: 'easeOutQuad' });
     }, 0);      

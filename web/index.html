@@ -11,7 +11,7 @@
   </script>
 </head>
 <body>
-  <canvas id="myCanvas" width="1080" height="102710"></canvas>
+<!-- <canvas id="myCanvas" width="1080" height="102710"></canvas> -->
  
 <!--   hello this is a test -->
 <!-- <script src="./scripts.js"></script> -->
@@ -20,8 +20,8 @@
   <button id="down">down</button>
   <button id="stop">stop!</button>
 <!--   <img src="http://ml1.oss-cn-hongkong.aliyuncs.com/art/WechatIMG5.jpeg"
-       style="width:360px;">
- -->
+       style="width:360px;"> -->
+
 
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
 <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.3/jquery.easing.min.js'></script>
@@ -32,36 +32,7 @@
     var script = '<script src=\"./scripts.js?r=' + rand + '\"><\/script>';
     document.write(script);
   </script>
-<!--   
-  <script>
-    var canvas = document.getElementById("myCanvas");
-    var ctx = canvas.getContext("2d");
-    ctx.font = "300px Arial";
-    var heightPerFloor = ($(document).height())/8;
-    console.log(heightPerFloor);
-    // for(var i=0; i<102710; i+=heightPerFloor){
-    //   var floorNum = ($(document).height()-i)/heightPerFloor //+1;  
-    //   ctx.fillText(floorNum+'楼',10,i);
-    //   console.log("canvas loop")
-    // }
-    for(var i=0; i<100000; i+=200){
-     var floorNum = (1600-i)/200+1;
-     ctx.fillText(floorNum+'楼',10,i);
-    }
-  </script> -->
-
-
-<script>
-var canvas = document.getElementById("myCanvas");
-var ctx = canvas.getContext("2d");
-ctx.font = "100px Arial";
-for(var j=0; j<1600; j+=200){
-  var floorNum = (1600-j)/200+1;
-  ctx.fillText(floorNum+'楼',100,j);
-  console.log(j);
-}
-</script>
-
+  
 </body>
 </html>
 

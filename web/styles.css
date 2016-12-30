@@ -1,3 +1,22 @@
+/*html {
+  min-width: 100%;
+  min-height: 100%;
+  background-image: url(http://www.example.com/somelargeimage.jpg);
+  background-position: top center;
+  background-color: #000;
+}
+*/
+body {
+  width: 1080px;
+  height: 102710px;
+  background-color: #FFF;
+}
+
+div{
+  font-size: 150px;
+      background-color: yellow;
+}
+
 #up{
     position: fixed;
     left: 400px;
