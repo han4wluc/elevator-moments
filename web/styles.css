@@ -14,42 +14,47 @@ body {
 
 div{
   font-size: 150px;
-      background-color: yellow;
+  background-color: yellow;
 }
 
 #up{
     position: fixed;
-    left: 400px;
+    left: 550px;
     top: 0;
-    width: 5%;
+    width: 15%;
 }
 
 #stop{
     position: fixed;
-    left: 500px;
-    top: 0;
-    width: 5%;
+    left: 550px;
+    top: 150px;
+    width: 15%;
 }
 
 #down{
     position: fixed;
-    left: 600px;
-    top: 0;
-    width: 5%;
+    left: 550px;
+    top: 300px;
+    width: 15%;
 }
 
 button{
-  display: inline;
+  display: block;
   color: black;
   padding: 15px 10px;
   text-align: center;
   text-decoration: none;
   display: inline-block;
-  font-size: 16px;
+  font-size: 30px;
+
 }
 
 img{
   display: block;
+}
+
+.change{
+  background-color: red;
 }
 
 /* .block {
@@ -61,3 +66,8 @@ img{
     height: 60px;
     margin: 5px;
 } */
+
+text{
+  font-size: 10px;
+  background-color: yellow;
+}
