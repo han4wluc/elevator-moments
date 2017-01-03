@@ -116,29 +116,31 @@ var i = 0;
 var accelerationArr=[];
 
 setTimeout(function(){
+
+	//load image & scroll down
 	console.log("load image for 2 secs");
 	$('html, body').animate({
       scrollTop: $(document).height()
   }, 2000);
 	console.log("scroll down to bottom");
+
 	//run data
 	setTimeout(function(){
 		setInterval(function(){
-		
-			var oneAcceleration = sampleAccelerations[i];
 
+		  //get moving averag value of acceleration
+			var oneAcceleration = sampleAccelerations[i];
 		  if(oneAcceleration === undefined){
 		    console.log('no more accelerations, please refresh page');
 		    return;
 		  };
 		  i++;
-
 			accelerationArr.push(oneAcceleration);
 			var acceleration = getAverage(accelerationArr,5);
-		  
 		  console.log('average', acceleration);
 
 
+      //changing direction
 	    if(listen == false){
 	    	return;
 	    }
@@ -177,7 +179,7 @@ setTimeout(function(){
 				console.log("down");
 				patternDown();
 			}
-			
+
 
 		}, 100);
 	
