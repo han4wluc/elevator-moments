@@ -121,23 +121,37 @@ var accelerationArr=[];
 
 setTimeout(function(){
 
-	//load image & scroll down
-	console.log("load image for 2 secs");
-	$('html, body').animate({
-      scrollTop: $(document).height()
-  }, 2000);
-  console.log("scroll down to bottom");
+  // $('#img').attr('')
+  // $('#img').animate({ 'marginTop': '-500px'}, 1000);
+
+	// //load image & scroll down
+	// console.log("load image for 2 secs");
+	// $('html, body').animate({
+ //      scrollTop: $(document).height()
+ //  }, 2000);
+ //  console.log("scroll down to bottom");
 
 }, 2000);
 
+var minPressure = 20100;
+// var minPressure = 20250;
+// var maxPressure = 22750;
+var maxPressure = 22950;
+var maxHeight = 102694;
+
+var pressureRange = maxPressure-minPressure;
 
 	//run data
 setTimeout(function(){
-  // WebViewBridge.onMessage = function(data){
+//   // WebViewBridge.onMessage = function(data){
 	setInterval(function(){
 
-    // data = JSON.parse(data)
+//     // data = JSON.parse(data)
 
+    // var height = $('#img').css('width')
+    // var h
+
+    // return
     var data = datas[i];
     if(data === undefined){
       console.log('no more accelerations, please refresh page');
@@ -145,73 +159,88 @@ setTimeout(function(){
     };
     i++;
 
-
-    var pressure = data.p;
-    if(pressure){
-      pressure = pressure - 1020000;
-    }
-    var oneAcceleration = data.a;
-
-    // var oneAcceleration = sampleAccelerations[i];
-    if(pressure){
-      $('#pressure').text('pressure: ' + pressure)
-    }
-    if(oneAcceleration){
-      $('#acceleration').text('acceleration: ' + oneAcceleration)
-    }
+    var pressure = data.p - 1020000;
 
 
+    var percentage = pressure / (pressureRange)
+    percentage = Math.round(percentage * 100) / 100
+    console.log(pressureRange, pressure, percentage)
 
-    accelerationArr.push(oneAcceleration);
-    accelerationArr = accelerationArr.slice(accelerationArr.length-50,accelerationArr.length)
-    // get average acceleration
-    var acceleration = getAverage(accelerationArr,5);
+    var marginTop = maxHeight -( maxHeight * percentage)
+    console.log('marginTop', marginTop)
+
+
+    $('#img').animate({ 'marginTop': `-${marginTop}px`}, 200);
+    // var height = maxPressure - minPressure;
+
+
+
+//     var pressure = data.p;
+//     if(pressure){
+//       pressure = pressure - 1020000;
+//     }
+//     var oneAcceleration = data.a;
+
+//     // var oneAcceleration = sampleAccelerations[i];
+//     if(pressure){
+//       $('#pressure').text('pressure: ' + pressure)
+//     }
+//     if(oneAcceleration){
+//       $('#acceleration').text('acceleration: ' + oneAcceleration)
+//     }
+
+
+
+//     accelerationArr.push(oneAcceleration);
+//     accelerationArr = accelerationArr.slice(accelerationArr.length-50,accelerationArr.length)
+//     // get average acceleration
+//     var acceleration = getAverage(accelerationArr,5);
     
-    console.log('average', acceleration);
+//     console.log('average', acceleration);
 
-    if(listen == false){
-      return;
-    }
+//     if(listen == false){
+//       return;
+//     }
 
-		if(acceleration > 10100){
-			if(state == 1){
-				return;
-			}
-			state++;
-			listen = false; 
-			setTimeout(function(){
-				listen = true;
-			},2000)
+// 		if(acceleration > 10100){
+// 			if(state == 1){
+// 				return;
+// 			}
+// 			state++;
+// 			listen = false; 
+// 			setTimeout(function(){
+// 				listen = true;
+// 			},2000)
 
-		}else if(acceleration < 9300){
-			if(state == -1){
-				return;
-			}
-			state--;
-			listen = false; 
-			setTimeout(function(){
-				listen = true;
-			},2000)
+// 		}else if(acceleration < 9300){
+// 			if(state == -1){
+// 				return;
+// 			}
+// 			state--;
+// 			listen = false; 
+// 			setTimeout(function(){
+// 				listen = true;
+// 			},2000)
 
-    }else{
-      return;
-    }
+//     }else{
+//       return;
+//     }
 
-    if(state === 1){
-      console.log("up");
-      patternUp();
-    } else if(state === 0){
-      console.log("stop");
-      patternStop();
-    } else if(state === -1){
-      console.log("down");
-      patternDown();
-    }
+//     if(state === 1){
+//       console.log("up");
+//       patternUp();
+//     } else if(state === 0){
+//       console.log("stop");
+//       patternStop();
+//     } else if(state === -1){
+//       console.log("down");
+//       patternDown();
+//     }
 
-  // }
+//   // }
   }, 100);
-  console.log("scroll down to bottom");
-},4000);
+//   console.log("scroll down to bottom");
+},2000);
 
 
 
