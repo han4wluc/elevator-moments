@@ -18,14 +18,14 @@ var getAverage = function(arr, n){
   return sum/n;
 }
 
-//floor sign
+// floor sign
 var heightPerFloor = ($(document).height())/8;
 for(var j=0; j<= $(document).height() ; j+=heightPerFloor){ 
   var floorNum = ($(document).height()-j)/heightPerFloor //+1;  
   var floorHeight = j-200;
   $('body').append(`<div style="position:absolute; top:${floorHeight}px; left:20px">floor${floorNum}</div>`);
 }
-console.log("total height:  "+$(document).height()+"px");
+// console.log("total height:  "+$(document).height()+"px");
 
 var patternUp = function(){
   $( "html, body" ).stop();
@@ -115,6 +115,7 @@ sampleAccelerations = sampleAccelerations.map(function(n){
 var i = 0;
 var accelerationArr=[];
 
+
 setTimeout(function(){
 
 	//load image & scroll down
@@ -122,70 +123,84 @@ setTimeout(function(){
 	$('html, body').animate({
       scrollTop: $(document).height()
   }, 2000);
-	console.log("scroll down to bottom");
+  console.log("scroll down to bottom");
+
+}, 2000);
+
 
 	//run data
-	setTimeout(function(){
-		setInterval(function(){
+setTimeout(function(){
+	setInterval(function(){
 
-		  //get moving averag value of acceleration
-			var oneAcceleration = sampleAccelerations[i];
-		  if(oneAcceleration === undefined){
-		    console.log('no more accelerations, please refresh page');
-		    return;
-		  };
-		  i++;
-			accelerationArr.push(oneAcceleration);
-			var acceleration = getAverage(accelerationArr,5);
-		  console.log('average', acceleration);
+    var oneAcceleration = sampleAccelerations[i];
+    // if(pressure){
+    //   $('#pressure').text('pressure: ' + pressure)
+    // }
+    if(oneAcceleration){
+      $('#acceleration').text('acceleration: ' + oneAcceleration)
+    }
 
 
-      //changing direction
-	    if(listen == false){
-	    	return;
-	    }
+    if(oneAcceleration === undefined){
+      console.log('no more accelerations, please refresh page');
+      return;
+    };
+    i++;
 
-			if(acceleration > 10100){
-				if(state == 1){
-					return;
-				}
-				state++;
-				listen = false; 
-				setTimeout(function(){
-					listen = true;
-				},2000)
+    accelerationArr.push(oneAcceleration);
+    accelerationArr = accelerationArr.slice(accelerationArr.length-50,accelerationArr.length)
+    // get average acceleration
+    var acceleration = getAverage(accelerationArr,5);
+    
+    console.log('average', acceleration);
 
-			}else if(acceleration < 9300){
-				if(state == -1){
-					return;
-				}
-				state--;
-				listen = false; 
-				setTimeout(function(){
-					listen = true;
-				},2000)
+    if(listen == false){
+      return;
+    }
 
-			}else{
+		if(acceleration > 10100){
+			if(state == 1){
 				return;
 			}
+			state++;
+			listen = false; 
+			setTimeout(function(){
+				listen = true;
+			},2000)
 
-			if(state === 1){
-				console.log("up");
-				patternUp();
-			} else if(state === 0){
-				console.log("stop");
-				patternStop();
-			} else if(state === -1){
-				console.log("down");
-				patternDown();
+		}else if(acceleration < 9300){
+			if(state == -1){
+				return;
 			}
+			state--;
+			listen = false; 
+			setTimeout(function(){
+				listen = true;
+			},2000)
+
+    }else{
+      return;
+    }
+
+    if(state === 1){
+      console.log("up");
+      patternUp();
+    } else if(state === 0){
+      console.log("stop");
+      patternStop();
+    } else if(state === -1){
+      console.log("down");
+      patternDown();
+    }
+
+  // }
+  }, 100);
+  console.log("scroll down to bottom");
+},4000);
 
 
-		}, 100);
-	
-	},2000);
 
-},2000);
+
 
 
 

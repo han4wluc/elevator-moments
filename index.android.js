@@ -35,7 +35,7 @@ const injectScript = `
 
 
 SensorManager.startAccelerometer(100);
-// SensorManager.startGyroscope(1000);
+SensorManager.startGyroscope(100);
 
 export default class elevator extends Component {
 
@@ -44,7 +44,8 @@ export default class elevator extends Component {
   
     this.state = {
       gyroscope: '',
-      accelerometer: ''
+      accelerometer: '',
+      pressure: 0,
     };
   }
 
@@ -76,21 +77,32 @@ export default class elevator extends Component {
       }
     }
 
-    // DeviceEventEmitter.addListener('Gyroscope', function (data) {
-    //   self.setState({
-    //     gyroscopeX: round(data.x),
-    //     gyroscopeXColor: getColor(data.x, self.state.gyroscopeX, 30),
-    //     gyroscopeY: round(data.y),
-    //     gyroscopeYColor: getColor(data.y, self.state.gyroscopeY, 30),
-    //     gyroscopeZ: round(data.z),
-    //     gyroscopeZColor: getColor(data.z, self.state.gyroscopeZ, 30),
-    //   })
-    // });    
-
     const arr = [];
 
+    var pressure = undefined;
+    var acceleration = undefined;
+
+    DeviceEventEmitter.addListener('Gyroscope', function (data) {
+      pressure = Math.round(data.x * 1000);
+      // webviewbridge.sendToBridge(round(data.x));
+      // arr.push(round(data.x)+'')
+      // if(arr.length % 100 == 0){
+      //   Clipboard.setString(JSON.stringify(arr))
+      // }
+      // self.setState({
+      //   gyroscopeX: Math.round(data.x * 1000),
+      //   gyroscopeXColor: getColor(data.x, self.state.gyroscopeX, 30),
+      //   gyroscopeY: data.y,
+      //   gyroscopeYColor: getColor(data.y, self.state.gyroscopeY, 30),
+      //   gyroscopeZ: data.z,
+      //   gyroscopeZColor: getColor(data.z, self.state.gyroscopeZ, 30),
+      // })
+    });
+
+
     DeviceEventEmitter.addListener('Accelerometer', function (data) {
-      webviewbridge.sendToBridge(round(data.y)+'');
+      acceleration = round(data.y);
+      // webviewbridge.sendToBridge(round(data.y)+'');
       // arr.push(round(data.y)+'')
       // if(arr.length % 100 == 0){
       //   Clipboard.setString(JSON.stringify(arr))
@@ -104,6 +116,16 @@ export default class elevator extends Component {
       //   accelerometerZColor: getColor(data.z, self.state.accelerometerZ, 30),
       // })
     });
+
+    // setTimeout(function(){
+      setInterval(function(){
+        webviewbridge.sendToBridge(JSON.stringify({
+          pressure: pressure,
+          acceleration: acceleration,
+        }));
+        // webviewbridge.sendToBridge('hellow');
+      },100)
+    // },2000)
 
   }
 
@@ -127,6 +149,7 @@ export default class elevator extends Component {
         ref="webviewbridge"
         // onBridgeMessage={this.onBridgeMessage.bind(this)}
         injectedJavaScript={injectScript}
+        // injectedJavaScript={""}
         source={{uri: "http://ml1.oss-cn-hongkong.aliyuncs.com/art/web/index.html?r="+rand}}/>
     );
   }
@@ -134,8 +157,9 @@ export default class elevator extends Component {
   // render() {
   //   return (
   //     <View style={styles.container}>
+
   //     {
-  //       // <Text>{'GRAVITY'}</Text>
+  //       // <Text>{'PRESSURE'}</Text>
   //       // <Text style={[styles.instructions,{backgroundColor:this.state.gyroscopeXColor}]}>
   //       //   {this.state.gyroscopeX}
   //       // </Text>

@@ -17,6 +17,24 @@ div{
   background-color: yellow;
 }
 
+
+#pressure{
+    position: fixed;
+    right: 50px;
+    top: 150px;
+    width: 15%;
+    font-size: 20px;
+}
+
+#acceleration{
+    position: fixed;
+    right: 50px;
+    top: 0;
+    width: 15%;
+    font-size: 20px;
+}
+
+
 #up{
     position: fixed;
     left: 550px;
