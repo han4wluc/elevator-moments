@@ -119,9 +119,16 @@ export default class elevator extends Component {
 
     // setTimeout(function(){
       setInterval(function(){
+        // arr.push({
+        //   p: pressure,
+        //   a: acceleration,
+        // })
+        // if(arr.length % 100 == 0){
+        //   Clipboard.setString(JSON.stringify(arr))
+        // }
         webviewbridge.sendToBridge(JSON.stringify({
-          pressure: pressure,
-          acceleration: acceleration,
+          p: pressure,
+          a: acceleration,
         }));
         // webviewbridge.sendToBridge('hellow');
       },100)
