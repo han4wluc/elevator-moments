@@ -99,6 +99,9 @@ var patternUp = function(floorNum){
   $('#stop').removeClass('change');     
 
  //buffer speed //startDuration
+  //$('body').append(`<div style="position:absolute; top:${floorHeight}px; left:20px">floor${floorNumText}</div>`);
+  $('body').append(`<div id="floorStatus">go up from ${floorNum} floor</div>`);
+  console.log("go up from",floorNum);
   console.log("start buffer");
 	$("html, body").animate( 
   {scrollTop: document.body.scrollTop-bufferGo
@@ -107,8 +110,7 @@ var patternUp = function(floorNum){
     easing: "easeInQuad"} 
 	); 
 	//even speed 
-	setTimeout(function(){
-		console.log("go up from",floorNum);
+	setTimeout(function(){		
 		$("html, body").animate( 
 	  {scrollTop: bufferStop
 	  },{
@@ -129,6 +131,7 @@ var patternDown = function(floorNum){
   $('#stop').removeClass('change');  
   
   //buffer speed 
+   $('body').append(`<div id="floorStatus">go down from ${floorNum} floor</div>`);
   console.log("start buffer");
 	$("html, body").animate( 
   {scrollTop: document.body.scrollTop+bufferGo
@@ -155,6 +158,7 @@ var patternStop = function(floorNum){
   $('#stop').addClass('change'); 
  
   if(direction == "up"){
+  	$('body').append(`<div id="floorStatus">stop at   ${floorNum} floor</div>`);
 		console.log("stop at",floorNum);	
     setTimeout(function(){  
     	//scroll up buffer top pixel except floor 7 to the top
@@ -175,6 +179,7 @@ var patternStop = function(floorNum){
   }
 
   if(direction == "down"){
+  	$('body').append(`<div id="floorStatus">stop at   ${floorNum} floor</div>`);
     console.log("stop");
     console.log("stop at",floorNum);
     setTimeout(function(){  
