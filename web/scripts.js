@@ -7,12 +7,11 @@ var bufferStop = 2500;
 var evenSpeed = 5.8;
 var stopDuration = 1900;//从减速到停止
 var startDuration = 1700; //从加速到匀速
-//var listenFloor = true;		
-//var floorNum ;
 
 //time from each floor to 8th floor
+//data from sample 3
 var upSpeeds = {
-	8: 0,//改
+	8: 0,
 	7: 800,
 	6: 3400,
 	5: 6000,
@@ -23,9 +22,10 @@ var upSpeeds = {
 	0: 19600,
 }
 
-//time from each floor down to 0 ground floor 
+//time from each floor down to 0 ground floor
+//data from sample 3 
 var downSpeeds = {
-	0: 0,//改
+	0: 0,
 	1: 800,
 	2: 3400,
 	3: 6000,
@@ -38,28 +38,29 @@ var downSpeeds = {
 
 var getFloorNum = function(pressure){
  // var floorNum = undefined;
- if(pressure<20450){
+ //data from sample 1 
+ if(pressure<500){
  		return 8;
  }
- if(pressure<20800){
+ if(pressure<850){
  		return 7;
  }
- if(pressure<21150){
+ if(pressure<1150){
  		return 6;
  }
- if(pressure<21400){
+ if(pressure<1400){
  		return 5;
  }
- if(pressure<21850){
+ if(pressure<1850){
  		return 4;
  }
- if(pressure<22150){
+ if(pressure<2150){
  		return 3;
  }
- if(pressure<22450){
+ if(pressure<2450){
  		return 2;
  }
- if(pressure<22700){
+ if(pressure<2700){
  	  return 1;
  }
   if(pressure<22950){ 
@@ -97,20 +98,25 @@ var patternUp = function(floorNum){
  	$('#down').removeClass('change'); 
   $('#stop').removeClass('change');     
 
-	console.log("go up from",floorNum);
+ //buffer speed //startDuration
+  console.log("start buffer");
 	$("html, body").animate( 
-  {scrollTop: bufferStop
+  {scrollTop: document.body.scrollTop-bufferGo
   },{
-    duration:upSpeeds[floorNum] ,   
-    easing: "linear"} 
+    duration:startDuration,   
+    easing: "easeInQuad"} 
 	); 
-	 //even speed for floor 7 //startDuration
-  	// $("html, body").animate( 
-   //  {scrollTop: bufferGo
-   //  },{
-   //    duration:2000,   
-   //    easing: "easeInQuad"} 
- 		// ); 
+	//even speed 
+	setTimeout(function(){
+		console.log("go up from",floorNum);
+		$("html, body").animate( 
+	  {scrollTop: bufferStop
+	  },{
+	    duration:upSpeeds[floorNum] ,   
+	    easing: "linear"} 
+		); 
+	},startDuration);
+	
 } 
  
 
@@ -121,21 +127,25 @@ var patternDown = function(floorNum){
   $('#up').removeClass('change');  
   $('#down').addClass('change'); 
   $('#stop').removeClass('change');  
-  //buffer //startDuration
-  // $("html, body").animate( 
-  //   {scrollTop: document.body.scrollTop+bufferStop
+  
+  //buffer speed 
+  console.log("start buffer");
+	$("html, body").animate( 
+  {scrollTop: document.body.scrollTop+bufferGo
+  },{
+    duration:startDuration,   
+    easing: "easeInQuad"} 
+	); 
 
-  //   },{
-  //     duration:1800 ,   
-  //     easing: "easeInQuad"} 
-  // ); 
   //even speed
-	$("html, body").animate({     
-    scrollTop:$(document).height()-bufferStop
-  }, {
-    duration:downSpeeds[floorNum],  
-    easing: "linear"
-  });
+  setTimeout(function(){
+		$("html, body").animate({     
+	    scrollTop:$(document).height()-bufferStop
+	  }, {
+	    duration:downSpeeds[floorNum],  
+	    easing: "linear"
+	  });
+	},startDuration);
 }
 
 var patternStop = function(floorNum){
@@ -148,7 +158,7 @@ var patternStop = function(floorNum){
 		console.log("stop at",floorNum);	
     setTimeout(function(){  
     	//scroll up buffer top pixel except floor 7 to the top
-		  if(floorNum == 7){
+		  if(floorNum == 8){
 	      $('html, body').animate(
 	      	{ scrollTop:0},
 	        { duration: stopDuration, 
@@ -227,7 +237,7 @@ setTimeout(function(){
     };
     i++;
 
-    var pressure = data.p - 1000000;
+    var pressure = data.p - 1020000;
     var oneAcceleration = data.a;
 
     if(pressure){
