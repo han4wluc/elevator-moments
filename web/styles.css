@@ -7,9 +7,11 @@
 }
 */
 body {
-  // width: 1080px;
-  // height: 102710px;
+  /*width: 1080px;*/
+  /*height: 102710px;*/
   background-color: #FFF;
+  /*will-change: scroll-position;*/
+  will-change: transform;
 }
 
 div{
@@ -39,21 +41,21 @@ div{
     position: fixed;
     left: 50px;
     top: 0;
-    // width: 15%;
+    /*width: 15%;*/
 }
 
 #stop{
     position: fixed;
     left: 50px;
     top: 150px;
-    // width: 15%;
+    /*width: 15%;*/
 }
 
 #down{
     position: fixed;
     left: 50px;
     top: 300px;
-    // width: 15%;
+    /*width: 15%;*/
 }
 
 #floorStatus{
