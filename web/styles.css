@@ -7,9 +7,43 @@
 }
 */
 body {
-  // width: 1080px;
-  // height: 102710px;
+ /*width: 1080px;*/
+   /*height: 102710px;*/
   background-color: #FFF;
+  position: fixed;
+  height: 100%;
+  width: 100%;
+
+}
+
+.image-container{
+  position: absolute;
+  /*height: 102710px;*/
+  height: 31457px;
+  width: 380px;
+  /*width: 1080px;*/
+  top: auto;
+  bottom: 0px;
+/*
+ -webkit-transition: bottom 10s ease;
+    -moz-transition: bottom 10s ease;
+      -o-transition: bottom 10s ease;
+     -ms-transition: bottom 10s ease;
+         transition: bottom 10s ease;
+*/
+  -webkit-transition-duration: 10s; /* Safari */
+  transition-duration: 10s;
+}
+
+.image-container img {
+  width: 380px;
+  height: 31457px;
+}
+
+.animate {
+  /*bottom: -31457px;*/
+  /*bottom: -30457px;*/
+  transform: translateY(-9000px);
 }
 
 div{
