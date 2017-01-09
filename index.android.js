@@ -11,9 +11,11 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
   DeviceEventEmitter,
   Clipboard,
   BackAndroid,
+  ScrollView,
 } from 'react-native';
 
 import { SensorManager } from 'NativeModules';
@@ -53,6 +55,8 @@ export default class elevator extends Component {
 
   componentDidMount() {
 
+    const self = this;
+
     BackAndroid.addEventListener('hardwareBackPress', function() {
      return true;
     });
@@ -63,7 +67,6 @@ export default class elevator extends Component {
     //   webviewbridge.sendToBridge("hello");
     // }, 1000)
 
-    const self = this;
 
     var round = function(x){
       return Math.round(x * 1000)
@@ -141,11 +144,11 @@ export default class elevator extends Component {
         if(arr.length % 100 == 0){
           Clipboard.setString(JSON.stringify(arr))
         }
-        webviewbridge.sendToBridge(JSON.stringify({
-          p: pressure,
-          a: acceleration,
-          t: temperature,
-        }));
+        // webviewbridge.sendToBridge(JSON.stringify({
+        //   p: pressure,
+        //   a: acceleration,
+        //   t: temperature,
+        // }));
         // webviewbridge.sendToBridge('hellow');
       },100)
     // },2000)
@@ -164,6 +167,7 @@ export default class elevator extends Component {
   //       break;
   //   }
   // }
+
 
   render() {
     var rand = Math.random();

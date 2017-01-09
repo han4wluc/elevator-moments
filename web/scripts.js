@@ -84,11 +84,11 @@ var getAverage = function(arr, n){
 // floor sign
 var heightPerFloor = ($(document).height())/8;
 console.log("heightPerFloor",heightPerFloor);
-for(var j=0; j<= $(document).height() ; j+=heightPerFloor){ 
-  var floorNumText = ($(document).height()-j)/heightPerFloor //+1;  
-  var floorHeight = j-200;
-  $('body').append(`<div style="position:absolute; top:${floorHeight}px; left:20px">floor${floorNumText}</div>`);
-}
+// for(var j=0; j<= $(document).height() ; j+=heightPerFloor){ 
+//   var floorNumText = ($(document).height()-j)/heightPerFloor //+1;  
+//   var floorHeight = j-200;
+//   $('body').append(`<div style="position:absolute; top:${floorHeight}px; left:20px">floor${floorNumText}</div>`);
+// }
 
 var patternUp = function(floorNum){
   $( "html, body" ).stop();
@@ -100,7 +100,7 @@ var patternUp = function(floorNum){
 
  //buffer speed //startDuration
   //$('body').append(`<div style="position:absolute; top:${floorHeight}px; left:20px">floor${floorNumText}</div>`);
-  $('body').append(`<div id="floorStatus">go up from ${floorNum} floor</div>`);
+  // $('body').append(`<div id="floorStatus">go up from ${floorNum} floor</div>`);
   console.log("go up from",floorNum);
   console.log("start buffer");
 	$("html, body").animate( 
@@ -131,7 +131,7 @@ var patternDown = function(floorNum){
   $('#stop').removeClass('change');  
   
   //buffer speed 
-   $('body').append(`<div id="floorStatus">go down from ${floorNum} floor</div>`);
+   // $('body').append(`<div id="floorStatus">go down from ${floorNum} floor</div>`);
   console.log("start buffer");
 	$("html, body").animate( 
   {scrollTop: document.body.scrollTop+bufferGo
@@ -158,7 +158,7 @@ var patternStop = function(floorNum){
   $('#stop').addClass('change'); 
  
   if(direction == "up"){
-  	$('body').append(`<div id="floorStatus">stop at   ${floorNum} floor</div>`);
+  	// $('body').append(`<div id="floorStatus">stop at   ${floorNum} floor</div>`);
 		console.log("stop at",floorNum);	
     setTimeout(function(){  
     	//scroll up buffer top pixel except floor 7 to the top
@@ -179,7 +179,7 @@ var patternStop = function(floorNum){
   }
 
   if(direction == "down"){
-  	$('body').append(`<div id="floorStatus">stop at   ${floorNum} floor</div>`);
+  	// $('body').append(`<div id="floorStatus">stop at   ${floorNum} floor</div>`);
     console.log("stop");
     console.log("stop at",floorNum);
     setTimeout(function(){  
@@ -256,7 +256,7 @@ setTimeout(function(){
     accelerationArr.push(oneAcceleration);
     accelerationArr = accelerationArr.slice(accelerationArr.length-50,accelerationArr.length)
     var acceleration = getAverage(accelerationArr,5); 
-    console.log('acceleration', acceleration,"pressure",pressure, "state",state);
+    // console.log('acceleration', acceleration,"pressure",pressure, "state",state);
 
     //get direction
     if(listen == false){
