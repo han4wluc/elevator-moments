@@ -13,6 +13,7 @@ import {
   View,
   DeviceEventEmitter,
   Clipboard,
+  BackAndroid,
 } from 'react-native';
 
 import { SensorManager } from 'NativeModules';
@@ -36,6 +37,7 @@ const injectScript = `
 
 SensorManager.startAccelerometer(100);
 SensorManager.startGyroscope(100);
+SensorManager.startThermometer(100);
 
 export default class elevator extends Component {
 
@@ -50,6 +52,12 @@ export default class elevator extends Component {
   }
 
   componentDidMount() {
+
+    BackAndroid.addEventListener('hardwareBackPress', function() {
+     return true;
+    });
+
+
     const { webviewbridge } = this.refs;
     // setInterval(function(){
     //   webviewbridge.sendToBridge("hello");
@@ -81,6 +89,12 @@ export default class elevator extends Component {
 
     var pressure = undefined;
     var acceleration = undefined;
+    var temperature = undefined;
+
+    DeviceEventEmitter.addListener('Thermometer', function (data) {
+      temperature = data.temp;
+    });
+
 
     DeviceEventEmitter.addListener('Gyroscope', function (data) {
       pressure = Math.round(data.x * 1000);
@@ -119,16 +133,18 @@ export default class elevator extends Component {
 
     // setTimeout(function(){
       setInterval(function(){
-        // arr.push({
-        //   p: pressure,
-        //   a: acceleration,
-        // })
-        // if(arr.length % 100 == 0){
-        //   Clipboard.setString(JSON.stringify(arr))
-        // }
+        arr.push({
+          p: pressure,
+          a: acceleration,
+          t: temperature,
+        })
+        if(arr.length % 100 == 0){
+          Clipboard.setString(JSON.stringify(arr))
+        }
         webviewbridge.sendToBridge(JSON.stringify({
           p: pressure,
           a: acceleration,
+          t: temperature,
         }));
         // webviewbridge.sendToBridge('hellow');
       },100)

@@ -7,8 +7,8 @@
 }
 */
 body {
-  width: 1080px;
-  height: 102710px;
+  // width: 1080px;
+  // height: 102710px;
   background-color: #FFF;
 }
 
@@ -37,30 +37,30 @@ div{
 
 #up{
     position: fixed;
-    left: 550px;
+    left: 50px;
     top: 0;
-    width: 15%;
+    // width: 15%;
 }
 
 #stop{
     position: fixed;
-    left: 550px;
+    left: 50px;
     top: 150px;
-    width: 15%;
+    // width: 15%;
 }
 
 #down{
     position: fixed;
-    left: 550px;
+    left: 50px;
     top: 300px;
-    width: 15%;
+    // width: 15%;
 }
 
 #floorStatus{
     position: fixed;
-    left: 550px;
+    left: 50px;
     top: 450px;
-    width: 15%;
+    // width: 15%;
     font-size: 50px;
 }
 
