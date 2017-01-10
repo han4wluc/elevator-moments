@@ -179,8 +179,8 @@ class Settings extends Component {
           <Button
             onPress={()=>{
               var newElevatorSettings = this.state.elevatorSettings;
-              // newElevatorSettings.maxPressure = 2700;
-              newElevatorSettings.maxPressure = pressure;
+              newElevatorSettings.maxPressure = 2700;
+              // newElevatorSettings.maxPressure = pressure;
               this.setState({
                 elevatorSettings: newElevatorSettings,
               })
