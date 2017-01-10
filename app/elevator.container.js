@@ -24,6 +24,9 @@ import {
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const DEVICE_WIDTH = Dimensions.get('window').width;
 const IMAGE_HEIGHT = 102710;
+const LAST_TOP = -IMAGE_HEIGHT - 9000
+const DURATION = 20000;
+
 
 var round = function(x){
   return Math.round(x * 1000)
@@ -41,7 +44,7 @@ var getAverage = function(arr, n){
 }
 
 var calcPercentage = function(value, min, max){
-  return ((value-min) / max);
+  return ((value-min) / (max-min));
 }
 
 // var getFloorNum = function(pressure){
@@ -108,7 +111,7 @@ class Elevator extends Component {
       direction: 'STOP',
       // top: new Animated.Value(0),
       // top: new Animated.Value(-IMAGE_HEIGHT + DEVICE_HEIGHT),
-      top: new Animated.Value(-IMAGE_HEIGHT + 10000),
+      top: new Animated.Value(LAST_TOP),
     };
   }
 
@@ -119,8 +122,10 @@ class Elevator extends Component {
     this.pressures = this.elevatorSettings.pressures;
     this.maxFloor = _.max(Object.keys(this.elevatorSettings.pressures))
     this.minFloor = _.min(Object.keys(this.elevatorSettings.pressures))
-    this.minPressure = this.elevatorSettings.pressures[this.maxFloor]
-    this.maxPressure = this.elevatorSettings.pressures[this.minFloor]
+    // this.minPressure = this.elevatorSettings.pressures[this.maxFloor]
+    // this.maxPressure = this.elevatorSettings.pressures[this.minFloor]
+    this.minPressure = 550;
+    this.maxPressure = 2500;
     this.pressureRange = this.maxPressure - this.minPressure;
 
     // this.temperatureListener = DeviceEventEmitter.addListener('Thermometer', function (data) {
@@ -145,6 +150,7 @@ class Elevator extends Component {
     let state = 0;
 
     this.interval = setInterval(function(){
+      // return;
       
       var data = datas[i];
       if(data === undefined){
@@ -223,14 +229,15 @@ class Elevator extends Component {
 
     this.direction = 'UP';
 
-    // const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+    const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
 
-    // console.warn(percentage)
+    // console.warn(this.pressure, this.minPressure, this.maxPressure, percentage)
+    console.warn('UP', this.pressure, percentage, DURATION * Math.abs(percentage))
 
     Animated.timing(
        this.state.top,
        {toValue: 0,
-       duration: 20000,
+       duration: DURATION * Math.abs(percentage),
        easing:Easing.inOut(Easing.ease)}
      ).start();
 
@@ -240,14 +247,15 @@ class Elevator extends Component {
 
     this.direction = 'DOWN';
 
-    // const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+    const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
 
+    console.warn('DOWN', this.pressure, percentage, DURATION * Math.abs(1 - percentage))
     // console.warn(percentage)
 
     Animated.timing(
        this.state.top,
-       {toValue: -IMAGE_HEIGHT /*+ DEVICE_HEIGHT*/  + 10000,
-       duration: 20000,
+       {toValue: LAST_TOP,
+       duration: DURATION * Math.abs(1 - percentage),
        easing:Easing.inOut(Easing.ease)}
      ).start();
   }
@@ -258,19 +266,23 @@ class Elevator extends Component {
 
     let currentTop = this.state.top._value;
 
+    const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+    console.warn('stop', this.pressure, percentage)
+
     if(this.direction == 'DOWN'){
 
-      let targetTop = currentTop - 10000
+      let targetTop = currentTop - 5000
       // if(floorNum == 0){
       // if(this.pressure > 2500){
-      //   console.warn('floorNum == 0')
-      //   targetTop = -100000;
-      // }
+      if(percentage > 1){
+        console.warn('floorNum == 0')
+        targetTop = LAST_TOP;
+      }
 
       Animated.timing(
          this.state.top,
          {toValue: targetTop,
-         duration: 2000,
+         duration: 4000,
          easing:Easing.out(Easing.ease)}
       ).start();
 
@@ -278,17 +290,17 @@ class Elevator extends Component {
 
     if(this.direction == 'UP'){
 
-      const targetTop = currentTop + 10000
+      const targetTop = currentTop + 5000
       // if(floorNum == 8){
-      // if(this.pressure < 700){
-      //   console.warn('floorNum == 8')
-      //   targetTop = 0;
-      // }
+      if(percentage < 0){
+        console.warn('floorNum == 8')
+        targetTop = 0;
+      }
 
       Animated.timing(
          this.state.top,
          {toValue: targetTop,
-         duration: 2000,
+         duration: 4000,
          easing:Easing.out(Easing.ease)}
        ).start();      
     }
@@ -316,7 +328,7 @@ class Elevator extends Component {
       imagesComp.push(
         <Image
           key={i}
-          style={{width: DEVICE_WIDTH, height: DEVICE_WIDTH*imgRatio}}
+          style={{width: (DEVICE_WIDTH), height: (DEVICE_WIDTH)*imgRatio}}
           source={{uri:imageName}}
         />
       )

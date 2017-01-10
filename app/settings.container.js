@@ -12,6 +12,13 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
+// pressures = {
+//   8: 200,
+//   7: 200,
+//   6: 200,
+  
+// }
+
 
 import Button from './Button';
 
@@ -28,25 +35,6 @@ const getRange = function(min, max){
   }
   return range;
 }
-
-
-// const getLocalFloorPressure = async function(){
-//   const elevatorSettingsString = await AsyncStorage.getItem('@ElevatorSettings');
-//   try {
-//     const elevatorSettings = JSON.parse(elevatorSettingsString);
-//     return elevatorSettings;
-//   } catch(err) {
-//     return {
-//       pressures: {}
-//     }
-//   }
-
-// }
-
-// const setLocalFloorPressure = async function(elevatorSettings){
-//   AsyncStorage.setItem('@ElevatorSettings', JSON.stringify(elevatorSettings));
-// }
-
 
 class Settings extends Component {
 
