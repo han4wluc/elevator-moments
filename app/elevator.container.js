@@ -23,13 +23,13 @@ import {
 
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const DEVICE_WIDTH = Dimensions.get('window').width;
-const IMAGE_HEIGHT = 102710;
-const LAST_TOP = -IMAGE_HEIGHT - 9000
+// const IMAGE_HEIGHT = 102710;
+const LAST_TOP = -111610
 const DURATION = 20000;
 
 
 var round = function(x){
-  return Math.round(x * 1000)
+  return Math.round(x * 1000) / 1000
 }
 
 var getAverage = function(arr, n){
@@ -46,48 +46,6 @@ var getAverage = function(arr, n){
 var calcPercentage = function(value, min, max){
   return ((value-min) / (max-min));
 }
-
-// var getFloorNum = function(pressure){
-
-
-
-//  // var floorNum = undefined;
-//  //data from sample 1 
-//  if(pressure<500){
-//     return 8;
-//  }
-//  if(pressure<850){
-//     return 7;
-//  }
-//  if(pressure<1150){
-//     return 6;
-//  }
-//  if(pressure<1400){
-//     return 5;
-//  }
-//  if(pressure<1850){
-//     return 4;
-//  }
-//  if(pressure<2150){
-//     return 3;
-//  }
-//  if(pressure<2450){
-//     return 2;
-//  }
-//  if(pressure<2700){
-//     return 1;
-//  }
-//   if(pressure<22950){ 
-//     return 0;
-//  }
-//  return 0;
-// }
-
-// var getFloorNum = function(pressure){
-
-//   if(pressure )
-
-// };
 
 class Elevator extends Component {
 
@@ -119,14 +77,11 @@ class Elevator extends Component {
     const self = this;
 
     this.elevatorSettings = await getLocalFloorPressure();
-    this.pressures = this.elevatorSettings.pressures;
-    this.maxFloor = _.max(Object.keys(this.elevatorSettings.pressures))
-    this.minFloor = _.min(Object.keys(this.elevatorSettings.pressures))
-    // this.minPressure = this.elevatorSettings.pressures[this.maxFloor]
-    // this.maxPressure = this.elevatorSettings.pressures[this.minFloor]
-    this.minPressure = 550;
-    this.maxPressure = 2500;
-    this.pressureRange = this.maxPressure - this.minPressure;
+    // this.minPressure = 550;
+    // this.maxPressure = 2500;
+    this.minPressure = this.elevatorSettings.minPressure;
+    this.maxPressure = this.elevatorSettings.maxPressure;
+
 
     // this.temperatureListener = DeviceEventEmitter.addListener('Thermometer', function (data) {
     //   self.temperature = data.temp;
@@ -138,7 +93,7 @@ class Elevator extends Component {
     // });
 
     // this.accelerationListener = DeviceEventEmitter.addListener('Accelerometer', function (data) {
-    //   self.acceleration = round(data.y);
+    //   self.acceleration = Math.round(data.y * 1000);
     //   // self.accelerations.push(self.acceleration)
     //   // self.accelerations.slice(self.accelerations.length-10, self.accelerations.length)
     // });
@@ -169,6 +124,7 @@ class Elevator extends Component {
 
       // console.warn(self.accelerations)
       var acceleration = getAverage(self.accelerations, 5);
+      self.acceleration = acceleration;
       // console.warn(acceleration)
       // var acceleration = data.a;
 
@@ -217,7 +173,7 @@ class Elevator extends Component {
        
   }
 
-  compnentWillUnmount() {
+  componentWillUnmount() {
     this.temperatureListener && this.temperatureListener.remove();
     this.pressureListener && this.pressureListener.remove();
     this.accelerationListener && this.accelerationListener.remove();
@@ -232,12 +188,17 @@ class Elevator extends Component {
     const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
 
     // console.warn(this.pressure, this.minPressure, this.maxPressure, percentage)
-    console.warn('UP', this.pressure, percentage, DURATION * Math.abs(percentage))
+    // console.warn('UP', this.pressure, percentage, DURATION * Math.abs(percentage))
+
+    const scrollPercentage = calcPercentage(this.state.top._value, 0, LAST_TOP)
+
+    console.warn('UP', percentage, scrollPercentage)
+
 
     Animated.timing(
        this.state.top,
        {toValue: 0,
-       duration: DURATION * Math.abs(percentage),
+       duration: Math.max(DURATION * Math.abs(percentage), 4000),
        easing:Easing.inOut(Easing.ease)}
      ).start();
 
@@ -248,14 +209,16 @@ class Elevator extends Component {
     this.direction = 'DOWN';
 
     const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+    const scrollPercentage = calcPercentage(this.state.top._value, 0, LAST_TOP)
 
-    console.warn('DOWN', this.pressure, percentage, DURATION * Math.abs(1 - percentage))
+    console.warn('DOWN', percentage, scrollPercentage)
+    // console.warn('DOWN', this.pressure, percentage, DURATION * Math.abs(1 - percentage))
     // console.warn(percentage)
 
     Animated.timing(
        this.state.top,
        {toValue: LAST_TOP,
-       duration: DURATION * Math.abs(1 - percentage),
+       duration: Math.max(DURATION * Math.abs(1 - percentage), 4000),
        easing:Easing.inOut(Easing.ease)}
      ).start();
   }
@@ -266,15 +229,27 @@ class Elevator extends Component {
 
     let currentTop = this.state.top._value;
 
-    const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
-    console.warn('stop', this.pressure, percentage)
+    const pressurePercentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+
+    const scrollPercentage = calcPercentage(this.state.top._value, 0, LAST_TOP)
+
+    // console.warn('STOP', 'pressurePercentage: ' + pressurePercentage, 'scrollPercentage:' + scrollPercentage)
+
+    console.warn('STOP\n', JSON.stringify({
+      pressurePercentage: round(pressurePercentage),
+      scrollPercentage: round(scrollPercentage),
+      pressure: this.pressure,
+    }))
+
+    // console.warn('stop', this.pressure, pressurePercentage)
 
     if(this.direction == 'DOWN'){
 
       let targetTop = currentTop - 5000
       // if(floorNum == 0){
       // if(this.pressure > 2500){
-      if(percentage > 1){
+      // if(pressurePercentage > 1){
+      if(this.pressure > (this.maxPressure-250)){
         console.warn('floorNum == 0')
         targetTop = LAST_TOP;
       }
@@ -292,7 +267,8 @@ class Elevator extends Component {
 
       const targetTop = currentTop + 5000
       // if(floorNum == 8){
-      if(percentage < 0){
+      // if(percentage < 0){
+      if(this.pressure < (this.minPressure+250)){
         console.warn('floorNum == 8')
         targetTop = 0;
       }

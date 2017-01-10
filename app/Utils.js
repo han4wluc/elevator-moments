@@ -8,14 +8,18 @@ const getLocalFloorPressure = async function(){
   try {
     const elevatorSettings = JSON.parse(elevatorSettingsString);
 
-    if(!elevatorSettings.pressure){
+    if(elevatorSettings.maxPressure === undefined || 
+        elevatorSettings.minPressure === undefined){
       throw new Error('please initialize pressure')
     }
 
     return elevatorSettings;
   } catch(err) {
+    // console.warn('err', err)
     const elevatorSettings = {
-      pressures: {}
+      // pressures: {}
+      maxPressure: undefined,
+      minPressure: undefined,
     }
     await AsyncStorage.setItem('@ElevatorSettings', JSON.stringify(elevatorSettings));
     return elevatorSettings;

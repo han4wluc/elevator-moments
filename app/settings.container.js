@@ -12,14 +12,6 @@ import {
   DeviceEventEmitter,
 } from 'react-native';
 
-// pressures = {
-//   8: 200,
-//   7: 200,
-//   6: 200,
-  
-// }
-
-
 import Button from './Button';
 
 import {
@@ -40,6 +32,8 @@ class Settings extends Component {
 
   constructor(props) {
     super(props);
+
+    this.pressure = undefined;
   
     this.state = {
       elevatorSettings: undefined,
@@ -62,6 +56,8 @@ class Settings extends Component {
     //     '-1': 200,
     //   }
     // }
+
+    console.warn(JSON.stringify(elevatorSettings))
 
     this.setState({
       elevatorSettings: elevatorSettings,
@@ -97,42 +93,42 @@ class Settings extends Component {
 
   // }
 
-  _renderFloor(){
+  // _renderFloor(){
 
-    const floorComps = [];
+  //   const floorComps = [];
 
-    getRange(-1,8).forEach((floor, i)=>{
-      const pressure = this.state.elevatorSettings.pressures[floor];
-      floorComps.push(
-        <View
-          key={i}
-          style={{
-            flexDirection:'row',
-            justifyContent:'center',
-            alignItems:'center',
-            marginTop: 8,
-          }}
-        >
-          <Text style={{width: 80}}>{`Floor ${floor}`}</Text>
-          <Text style={{width: 80}}>{pressure}</Text>
-          <Button
-            onPress={()=>{
-              var newElevatorSettings = this.state.elevatorSettings;
-              newElevatorSettings.pressures[floor] = this.pressure;
-              this.setState({
-                elevatorSettings: newElevatorSettings,
-              })
-              setLocalFloorPressure(newElevatorSettings);
-            }}
-            text={'Set Pressure'}
-          />
-        </View>      
-      )
-    })
+  //   getRange(-1,8).forEach((floor, i)=>{
+  //     const pressure = this.state.elevatorSettings.pressures[floor];
+  //     floorComps.push(
+  //       <View
+  //         key={i}
+  //         style={{
+  //           flexDirection:'row',
+  //           justifyContent:'center',
+  //           alignItems:'center',
+  //           marginTop: 8,
+  //         }}
+  //       >
+  //         <Text style={{width: 80}}>{`Floor ${floor}`}</Text>
+  //         <Text style={{width: 80}}>{pressure}</Text>
+  //         <Button
+  //           onPress={()=>{
+  //             var newElevatorSettings = this.state.elevatorSettings;
+  //             newElevatorSettings.pressures[floor] = this.pressure;
+  //             this.setState({
+  //               elevatorSettings: newElevatorSettings,
+  //             })
+  //             setLocalFloorPressure(newElevatorSettings);
+  //           }}
+  //           text={'Set Pressure'}
+  //         />
+  //       </View>
+  //     )
+  //   })
 
-    return floorComps;
+  //   return floorComps;
 
-  }
+  // }
 
   render() {
 
@@ -146,6 +142,54 @@ class Settings extends Component {
         <Text>
           {'Settings'}
         </Text>
+
+        <View style={{
+          flexDirection:'row',
+          justifyContent:'center',
+          alignItems:'center',
+          marginTop: 8,
+        }}>
+
+          <Text style={{width: 120}}>{`MinPressure`}</Text>
+          <Text style={{width: 120}}>{this.state.elevatorSettings.minPressure}</Text>
+          <Button
+            onPress={()=>{
+              var newElevatorSettings = this.state.elevatorSettings;
+              newElevatorSettings.minPressure = 300;
+              this.setState({
+                elevatorSettings: newElevatorSettings,
+              })
+              setLocalFloorPressure(newElevatorSettings);
+
+            }}
+            text={'Set Pressure'}
+          />
+
+        </View>
+
+        <View style={{
+          flexDirection:'row',
+          justifyContent:'center',
+          alignItems:'center',
+          marginTop: 8,
+        }}>
+
+          <Text style={{width: 120}}>{`MaxPressure`}</Text>
+          <Text style={{width: 120}}>{this.state.elevatorSettings.maxPressure}</Text>
+          <Button
+            onPress={()=>{
+              var newElevatorSettings = this.state.elevatorSettings;
+              // newElevatorSettings.maxPressure = 2700;
+              newElevatorSettings.maxPressure = pressure;
+              this.setState({
+                elevatorSettings: newElevatorSettings,
+              })
+              setLocalFloorPressure(newElevatorSettings);
+            }}
+            text={'Set Pressure'}
+          />
+
+        </View>
 
         {/*
         <TextInput
@@ -168,11 +212,7 @@ class Settings extends Component {
         />
       */}
 
-        <View style={{marginTop:20}}>
-
-          {this._renderFloor.call(this)}
-
-        </View>
+       
 
 
       </ScrollView>
