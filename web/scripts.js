@@ -246,7 +246,7 @@ var accelerationArr=[];
 setTimeout(function(){
 
 	setInterval(function(){
-    // return;
+    return;
 
     var data = datas[i];
     if(data === undefined){
