@@ -83,9 +83,16 @@ def enableSeparateBuildPerCPUArchitecture = false
 def enableProguardInReleaseBuilds = false
 
 android {
+    signingConfigs {
+        release {
+            keyAlias 'release'
+            keyPassword 'elevator'
+            storeFile file('/Users/lu/Dev/Laravel/lara88/coder_bunker/elevator-moments/mobile/android/keystores/elevator.release.keystore')
+            storePassword 'elevator'
+        }
+    }
     compileSdkVersion 23
     buildToolsVersion "23.0.1"
-
     defaultConfig {
         applicationId "com.elevator"
         minSdkVersion 16
@@ -95,6 +102,7 @@ android {
         ndk {
             abiFilters "armeabi-v7a", "x86"
         }
+        signingConfig signingConfigs.release
     }
     splits {
         abi {
@@ -115,7 +123,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -123,12 +131,15 @@ android {
             }
         }
     }
+    productFlavors {
+    }
 }
 
 dependencies {
-    compile fileTree(dir: "libs", include: ["*.jar"])
-    compile "com.android.support:appcompat-v7:23.0.1"
-    compile "com.facebook.react:react-native:+"  // From node_modules
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile 'com.android.support:appcompat-v7:23.0.1'
+    compile 'com.facebook.react:react-native:+'
+    // From node_modules
     compile project(':react-native-webview-bridge')
     compile project(':react-native-sensor-manager')
 }
