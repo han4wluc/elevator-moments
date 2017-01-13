@@ -1,4 +1,3 @@
-
 import React, { Component } from 'react';
 
 import {
@@ -14,7 +13,7 @@ import {
 
 import _ from 'lodash';
 
-import { SensorManager } from 'NativeModules';
+// import { SensorManager } from 'NativeModules';
 
 import {
   getLocalFloorPressure,
@@ -24,8 +23,12 @@ import {
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const DEVICE_WIDTH = Dimensions.get('window').width;
 // const IMAGE_HEIGHT = 102710;
-const LAST_TOP = -111610
-const DURATION = 20000;
+const LAST_TOP = -111610;  //bottom 
+const DURATION = 20000; //from bottom floor to top floor 
+const NUM_AVR_ACC = 3; //number of moving average of acceleration values
+const MIN_SCROLL_DURATION = 4000;
+const BUFFER_DISTANCE=5000 ;
+const BUFFER_DURATION = 1800;
 
 
 var round = function(x){
@@ -62,14 +65,9 @@ class Elevator extends Component {
     this.listen = true;
 
     this.state = {
-      // gyroscope: '',
-      // accelerometer: '',
-      // pressure: 0,
-      // top: 0,
       direction: 'STOP',
       // top: new Animated.Value(0),
-      // top: new Animated.Value(-IMAGE_HEIGHT + DEVICE_HEIGHT),
-      top: new Animated.Value(LAST_TOP),
+      top: new Animated.Value(LAST_TOP), // initial position at bottom 
     };
   }
 
@@ -120,10 +118,10 @@ class Elevator extends Component {
       self.acceleration = data.a;
 
       self.accelerations.push(self.acceleration)
-      self.accelerations = self.accelerations.slice(self.accelerations.length-5, self.accelerations.length)
+      self.accelerations = self.accelerations.slice(self.accelerations.length-NUM_AVR_ACC, self.accelerations.length)
 
       // console.warn(self.accelerations)
-      var acceleration = getAverage(self.accelerations, 5);
+      var acceleration = getAverage(self.accelerations, NUM_AVR_ACC);
       self.acceleration = acceleration;
       // console.warn(acceleration)
       // var acceleration = data.a;
@@ -185,20 +183,20 @@ class Elevator extends Component {
 
     this.direction = 'UP';
 
-    const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+    const pressurePercentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
 
     // console.warn(this.pressure, this.minPressure, this.maxPressure, percentage)
     // console.warn('UP', this.pressure, percentage, DURATION * Math.abs(percentage))
 
     const scrollPercentage = calcPercentage(this.state.top._value, 0, LAST_TOP)
 
-    console.warn('UP', percentage, scrollPercentage)
+    console.warn('UP', pressurePercentage, scrollPercentage)
 
 
     Animated.timing(
        this.state.top,
        {toValue: 0,
-       duration: Math.max(DURATION * Math.abs(percentage), 4000),
+       duration: Math.max(DURATION * Math.abs(pressurePercentage), MIN_SCROLL_DURATION),
        easing:Easing.inOut(Easing.ease)}
      ).start();
 
@@ -208,17 +206,17 @@ class Elevator extends Component {
 
     this.direction = 'DOWN';
 
-    const percentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
+    const pressurePercentage = calcPercentage(this.pressure, this.minPressure, this.maxPressure);
     const scrollPercentage = calcPercentage(this.state.top._value, 0, LAST_TOP)
 
-    console.warn('DOWN', percentage, scrollPercentage)
+    console.warn('DOWN', pressurePercentage, scrollPercentage)
     // console.warn('DOWN', this.pressure, percentage, DURATION * Math.abs(1 - percentage))
     // console.warn(percentage)
 
     Animated.timing(
        this.state.top,
        {toValue: LAST_TOP,
-       duration: Math.max(DURATION * Math.abs(1 - percentage), 4000),
+       duration: Math.max(DURATION * Math.abs(1 - pressurePercentage), MIN_SCROLL_DURATION),
        easing:Easing.inOut(Easing.ease)}
      ).start();
   }
@@ -245,10 +243,7 @@ class Elevator extends Component {
 
     if(this.direction == 'DOWN'){
 
-      let targetTop = currentTop - 5000
-      // if(floorNum == 0){
-      // if(this.pressure > 2500){
-      // if(pressurePercentage > 1){
+      var targetTop = currentTop - BUFFER_DISTANCE
       if(this.pressure > (this.maxPressure-250)){
         console.warn('floorNum == 0')
         targetTop = LAST_TOP;
@@ -257,7 +252,7 @@ class Elevator extends Component {
       Animated.timing(
          this.state.top,
          {toValue: targetTop,
-         duration: 4000,
+         duration: BUFFER_DURATION,
          easing:Easing.out(Easing.ease)}
       ).start();
 
@@ -265,10 +260,10 @@ class Elevator extends Component {
 
     if(this.direction == 'UP'){
 
-      const targetTop = currentTop + 5000
+      var targetTop = currentTop + BUFFER_DISTANCE
       // if(floorNum == 8){
       // if(percentage < 0){
-      if(this.pressure < (this.minPressure+250)){
+      if(this.pressure < (this.minPressure+250)){ //todo: add second top /bottom floor pressure setting 
         console.warn('floorNum == 8')
         targetTop = 0;
       }
@@ -276,7 +271,7 @@ class Elevator extends Component {
       Animated.timing(
          this.state.top,
          {toValue: targetTop,
-         duration: 4000,
+         duration: BUFFER_DURATION,
          easing:Easing.out(Easing.ease)}
        ).start();      
     }
