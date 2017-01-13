@@ -23,7 +23,9 @@ import {
 const DEVICE_HEIGHT = Dimensions.get('window').height;
 const DEVICE_WIDTH = Dimensions.get('window').width;
 // const IMAGE_HEIGHT = 102710;
-const LAST_TOP = -111610;  //bottom 
+// const LAST_TOP = -111610; 
+// const LAST_TOP = -102710;  //bottom 
+const LAST_TOP = -102300;  //bottom 
 const DURATION = 20000; //from bottom floor to top floor 
 const NUM_AVR_ACC = 3; //number of moving average of acceleration values
 const MIN_SCROLL_DURATION = 4000;
@@ -66,6 +68,7 @@ class Elevator extends Component {
 
     this.state = {
       direction: 'STOP',
+      showBottom: true,
       // top: new Animated.Value(0),
       top: new Animated.Value(LAST_TOP), // initial position at bottom 
     };
@@ -125,6 +128,19 @@ class Elevator extends Component {
       self.acceleration = acceleration;
       // console.warn(acceleration)
       // var acceleration = data.a;
+
+      const scrollPercentage = calcPercentage(self.state.top._value, 0, LAST_TOP)
+      if(scrollPercentage > 0.5 && self.state.showBottom === false){
+        self.setState({
+          showBottom: true,
+        })
+      }
+
+      if(scrollPercentage < 0.5 && self.state.showBottom === true){
+        self.setState({
+          showBottom: false,
+        })
+      }
 
       if(self.listen == false){
         return;
@@ -282,6 +298,7 @@ class Elevator extends Component {
 
 
   _renderImages(){
+    const self = this;
     var imageNames = [
       'img1_0','img1_1','img1_2','img1_3','img1_4','img1_5','img1_6','img1_7','img1_8','img1_9','img1_10','img1_11','img1_12','img1_13','img1_14','img1_15','img1_16','img1_17','img1_18','img1_19','img1_20','img1_21','img1_22','img1_23','img1_24','img1_25','img1_26','img1_27','img1_28','img1_29','img1_30','img1_31',
       'img2_0','img2_1','img2_2','img2_3','img2_4','img2_5','img2_6','img2_7','img2_8','img2_9','img2_10','img2_11','img2_12','img2_13','img2_14','img2_15','img2_16','img2_17','img2_18','img2_19','img2_20','img2_21','img2_22','img2_23','img2_24','img2_25','img2_26','img2_27','img2_28','img2_29','img2_30','img2_31',
@@ -296,6 +313,17 @@ class Elevator extends Component {
       } else {
         imgRatio = 983/380;
       }
+
+      if(self.state.showBottom === true){
+        if(i < 45){
+          imageName = 'none'
+        }
+      } else {
+        if(i > 55){
+          imageName = 'none'
+        }
+      }
+
       imagesComp.push(
         <Image
           key={i}
@@ -323,7 +351,7 @@ class Elevator extends Component {
           }}
         >
 
-          { this._renderImages() }
+          { this._renderImages.call(this) }
 
         </Animated.View>
 
