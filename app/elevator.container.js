@@ -9,9 +9,12 @@ import {
   Easing,
   DeviceEventEmitter,
   Dimensions,
+  NativeModules,
 } from 'react-native';
 
 import _ from 'lodash';
+
+const gc = NativeModules.GarbageCollector.gc;
 
 // import { SensorManager } from 'NativeModules';
 
@@ -26,7 +29,8 @@ const DEVICE_WIDTH = Dimensions.get('window').width;
 // const LAST_TOP = -111610; 
 // const LAST_TOP = -102710;  //bottom 
 const LAST_TOP = -102300;  //bottom 
-const DURATION = 20000; //from bottom floor to top floor 
+// const DURATION = 20000; //from bottom floor to top floor 
+const DURATION = 26000; //from bottom floor to top floor 
 const NUM_AVR_ACC = 3; //number of moving average of acceleration values
 const MIN_SCROLL_DURATION = 4000;
 const BUFFER_DISTANCE=5000 ;
@@ -131,8 +135,10 @@ class Elevator extends Component {
       if(DEBUG_MODE){
         var data = datas[i];
         if(data === undefined){
-          console.warn('no more accelerations, please refresh page');
-          clearInterval(self.interval)
+          i = 0
+          state = 0
+          // console.warn('no more accelerations, please refresh page');
+          // clearInterval(self.interval)
           return;
         };
         i++;
@@ -259,7 +265,7 @@ class Elevator extends Component {
      ).start();
   }
 
-  stop(floorNum) {
+  stop() {
 
     this.state.top.stopAnimation();
 
@@ -278,6 +284,11 @@ class Elevator extends Component {
     }))
 
     // console.warn('stop', this.pressure, pressurePercentage)
+
+    // garbage collector
+    setTimeout(function(){
+      gc();
+    }, BUFFER_DURATION + 1000)
 
     if(this.direction == 'DOWN'){
 
