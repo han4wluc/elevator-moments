@@ -39,6 +39,7 @@ class Settings extends Component {
       elevatorSettings: undefined,
       minFloor: undefined,
       maxFloor: undefined,
+      pressure: undefined,
     };
   }
 
@@ -71,6 +72,9 @@ class Settings extends Component {
 
     this.pressureListener = DeviceEventEmitter.addListener('Gyroscope', function (data) {
       self.pressure = Math.round(data.x * 1000) - 1020000;
+      self.setState({
+        pressure: self.pressure
+      })
     });
        
   }
@@ -137,10 +141,10 @@ class Settings extends Component {
     }
 
     return (
-      <ScrollView>
+      <ScrollView style={{paddingTop:88}}>
 
         <Text>
-          {'Settings'}
+          {'Pressure:' + this.state.pressure}
         </Text>
 
         <View style={{
@@ -149,13 +153,12 @@ class Settings extends Component {
           alignItems:'center',
           marginTop: 8,
         }}>
-
           <Text style={{width: 120}}>{`MinPressure`}</Text>
           <Text style={{width: 120}}>{this.state.elevatorSettings.minPressure}</Text>
           <Button
             onPress={()=>{
               var newElevatorSettings = this.state.elevatorSettings;
-              newElevatorSettings.minPressure = 300;
+              newElevatorSettings.minPressure = this.pressure;
               this.setState({
                 elevatorSettings: newElevatorSettings,
               })
@@ -164,7 +167,50 @@ class Settings extends Component {
             }}
             text={'Set Pressure'}
           />
+        </View>
 
+        <View style={{
+          flexDirection:'row',
+          justifyContent:'center',
+          alignItems:'center',
+          marginTop: 8,
+        }}>
+          <Text style={{width: 120}}>{`SecondMinPressure`}</Text>
+          <Text style={{width: 120}}>{this.state.elevatorSettings.secondMinPressure}</Text>
+          <Button
+            onPress={()=>{
+              var newElevatorSettings = this.state.elevatorSettings;
+              newElevatorSettings.secondMinPressure = this.pressure;
+              this.setState({
+                elevatorSettings: newElevatorSettings,
+              })
+              setLocalFloorPressure(newElevatorSettings);
+
+            }}
+            text={'Set Pressure'}
+          />
+        </View>
+
+        <View style={{
+          flexDirection:'row',
+          justifyContent:'center',
+          alignItems:'center',
+          marginTop: 8,
+        }}>
+          <Text style={{width: 120}}>{`SecondMaxPressure`}</Text>
+          <Text style={{width: 120}}>{this.state.elevatorSettings.secondMaxPressure}</Text>
+          <Button
+            onPress={()=>{
+              var newElevatorSettings = this.state.elevatorSettings;
+              newElevatorSettings.secondMaxPressure = this.pressure;
+              this.setState({
+                elevatorSettings: newElevatorSettings,
+              })
+              setLocalFloorPressure(newElevatorSettings);
+
+            }}
+            text={'Set Pressure'}
+          />
         </View>
 
         <View style={{
@@ -179,7 +225,7 @@ class Settings extends Component {
           <Button
             onPress={()=>{
               var newElevatorSettings = this.state.elevatorSettings;
-              newElevatorSettings.maxPressure = 2700;
+              newElevatorSettings.maxPressure = this.pressure;
               // newElevatorSettings.maxPressure = pressure;
               this.setState({
                 elevatorSettings: newElevatorSettings,
