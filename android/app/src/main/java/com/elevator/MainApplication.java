@@ -13,8 +13,10 @@ import com.facebook.soloader.SoLoader;
 import java.util.Arrays;
 import java.util.List;
 
+import com.rnfs.RNFSPackage;
 import com.sensormanager.SensorManagerPackage;
 import com.github.alinz.reactnativewebviewbridge.WebViewBridgePackage;
+
 
 public class MainApplication extends Application implements ReactApplication {
 
@@ -30,7 +32,8 @@ public class MainApplication extends Application implements ReactApplication {
           new MainReactPackage(),
           new CustomPackages(),
           new WebViewBridgePackage(),
-          new SensorManagerPackage()
+          new SensorManagerPackage(),
+          new RNFSPackage()
       );
     }
   };
