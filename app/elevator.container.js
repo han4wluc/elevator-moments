@@ -40,8 +40,8 @@ const MIN_SCROLL_DURATION = 4000;
 const BUFFER_DISTANCE = 3500 ;
 const BUFFER_DURATION = 1800;
 
-const DEBUG_MODE = true;
-// const DEBUG_MODE = false;
+// const DEBUG_MODE = true;
+const DEBUG_MODE = false;
 
 
 var round = function(x){
@@ -115,7 +115,7 @@ class Elevator extends Component {
     })
 
 
-    if(ii % 6000 == 0){
+    if(ii % 600 == 0){
       const day = moment(new Date()).format('YYYYMMDD');
       const minute = moment(new Date()).format('hhmm');
 
