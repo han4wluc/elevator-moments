@@ -39,6 +39,7 @@ const NUM_AVR_ACC = 6; //number of moving average of acceleration values
 const MIN_SCROLL_DURATION = 4000;
 const BUFFER_DISTANCE = 3500 ;
 const BUFFER_DURATION = 1800;
+const SECOND_MIN_MAX_EXTRA = 75;
 
 // const DEBUG_MODE = true;
 const DEBUG_MODE = false;
@@ -347,7 +348,7 @@ class Elevator extends Component {
 
       var targetTop = currentTop - BUFFER_DISTANCE
       // if(this.pressure > (this.maxPressure-250)){
-      if(this.pressure > (this.secondMaxPressure)){
+      if(this.pressure > (this.secondMaxPressure + SECOND_MIN_MAX_EXTRA)){
         console.warn('floorNum == 0')
         targetTop = LAST_TOP;
       }
@@ -367,7 +368,7 @@ class Elevator extends Component {
       // if(floorNum == 8){
       // if(percentage < 0){
       // if(this.pressure < (this.minPressure+250)){ //todo: add second top /bottom floor pressure setting 
-      if(this.pressure < (this.secondMinPressure)){
+      if(this.pressure < (this.secondMinPressure - SECOND_MIN_MAX_EXTRA)){
         console.warn('floorNum == 8')
         targetTop = 0;
       }
