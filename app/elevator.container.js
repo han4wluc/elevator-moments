@@ -39,7 +39,7 @@ const NUM_AVR_ACC = 6; //number of moving average of acceleration values
 const MIN_SCROLL_DURATION = 4000;
 const BUFFER_DISTANCE = 3500 ;
 const BUFFER_DURATION = 1800;
-const SECOND_MIN_MAX_EXTRA = 75;
+const SECOND_MIN_MAX_EXTRA = 100;
 
 // const DEBUG_MODE = true;
 const DEBUG_MODE = false;
